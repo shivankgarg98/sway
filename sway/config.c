@@ -307,6 +307,7 @@ static void config_defaults(struct sway_config *config) {
 	config->hide_edge_borders = E_NONE;
 	config->hide_edge_borders_smart = ESMART_OFF;
 	config->hide_lone_tab = false;
+	config->hide_tab_titles = false;
 
 	config->has_focused_tab_title = false;
 

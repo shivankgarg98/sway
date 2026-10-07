@@ -86,6 +86,7 @@ static const struct cmd_handler handlers[] = {
 	{ "show_marks", cmd_show_marks },
 	{ "smart_borders", cmd_smart_borders },
 	{ "smart_gaps", cmd_smart_gaps },
+	{ "tab_titles", cmd_tab_titles },
 	{ "tiling_drag", cmd_tiling_drag },
 	{ "tiling_drag_threshold", cmd_tiling_drag_threshold },
 	{ "title_align", cmd_title_align },

@@ -400,6 +400,7 @@ void view_autoconfigure(struct sway_view *view) {
 		}
 	}
 
+	bool hidden_tab_title = false;
 	if (!container_is_floating(con)) {
 		// In a tabbed or stacked container, the container's y is the top of the
 		// title area. We have to offset the surface y by the height of the title,
@@ -407,8 +408,10 @@ void view_autoconfigure(struct sway_view *view) {
 		list_t *siblings = container_get_siblings(con);
 		bool show_titlebar = (siblings && siblings->length > 1)
 			|| !config->hide_lone_tab;
-		if (show_titlebar) {
-			enum sway_container_layout layout = container_parent_layout(con);
+		enum sway_container_layout layout = container_parent_layout(con);
+		if (layout == L_TABBED && container_tab_row_hidden(con, false)) {
+			hidden_tab_title = true;
+		} else if (show_titlebar) {
 			if (layout == L_TABBED) {
 				y_offset = container_titlebar_height();
 				con->pending.border_top = false;
@@ -445,7 +448,7 @@ void view_autoconfigure(struct sway_view *view) {
 		width = con->pending.width
 			- con->pending.border_thickness * con->pending.border_left
 			- con->pending.border_thickness * con->pending.border_right;
-		if (y_offset) {
+		if (y_offset || hidden_tab_title) {
 			y = con->pending.y + y_offset;
 			height = con->pending.height - y_offset
 				- con->pending.border_thickness * con->pending.border_bottom;

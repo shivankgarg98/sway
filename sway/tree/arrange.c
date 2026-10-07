@@ -186,9 +186,11 @@ static void apply_tabbed_layout(list_t *children, struct wlr_box *parent) {
 	if (!children->length) {
 		return;
 	}
+	bool row_hidden = container_tab_row_hidden(children->items[0], false);
 	for (int i = 0; i < children->length; ++i) {
 		struct sway_container *child = children->items[i];
-		int parent_offset = child->view ? 0 : container_titlebar_height();
+		int parent_offset = child->view || row_hidden ?
+			0 : container_titlebar_height();
 		child->pending.x = parent->x;
 		child->pending.y = parent->y + parent_offset;
 		child->pending.width = parent->width;

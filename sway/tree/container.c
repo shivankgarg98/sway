@@ -1387,6 +1387,46 @@ list_t *container_get_siblings(struct sway_container *container) {
 	return container->pending.workspace->floating;
 }
 
+bool container_tab_row_hidden(struct sway_container *child, bool current) {
+	if (!config->hide_tab_titles) {
+		return false;
+	}
+	struct sway_container *parent =
+		current ? child->current.parent : child->pending.parent;
+	struct sway_workspace *ws =
+		current ? child->current.workspace : child->pending.workspace;
+	if (!ws) {
+		return false;
+	}
+	enum sway_container_layout layout = !parent ? (current ?
+			ws->current.layout : ws->layout) :
+		current ? parent->current.layout : parent->pending.layout;
+	if (layout != L_TABBED) {
+		return false;
+	}
+	// Only the workspace's top-level tabbed container (reached from the
+	// workspace through lone children of splits, so it spans the workspace)
+	// leaves its tabs to the bar. Nested ones keep the row, or nothing on
+	// screen would show they are tabbed; a tabbed or stacked ancestor draws
+	// its own titles, so a tabbed container below one is nested too.
+	for (struct sway_container *con = parent; con;
+			con = current ? con->current.parent : con->pending.parent) {
+		struct sway_container *up =
+			current ? con->current.parent : con->pending.parent;
+		list_t *siblings = up ?
+			(current ? up->current.children : up->pending.children) :
+			(current ? ws->current.tiling : ws->tiling);
+		enum sway_container_layout up_layout = up ?
+			(current ? up->current.layout : up->pending.layout) :
+			(current ? ws->current.layout : ws->layout);
+		if (siblings->length != 1 || siblings->items[0] != con ||
+				(up_layout != L_HORIZ && up_layout != L_VERT)) {
+			return false;
+		}
+	}
+	return true;
+}
+
 int container_sibling_index(struct sway_container *child) {
 	return list_find(container_get_siblings(child), child);
 }

@@ -317,6 +317,11 @@ static void arrange_children(enum sway_container_layout layout, list_t *children
 				first->current.border != B_NORMAL) {
 			title_bar_height = 0;
 		}
+		bool row_hidden = children->length &&
+			container_tab_row_hidden(children->items[0], true);
+		if (row_hidden) {
+			title_bar_height = 0;
+		}
 
 		double w = (double) width / children->length;
 		int title_offset = 0;
@@ -334,7 +339,8 @@ static void arrange_children(enum sway_container_layout layout, list_t *children
 
 			int net_height = height - title_bar_height;
 			if (activated && width > 0 && net_height > 0) {
-				arrange_container(child, width, net_height, title_bar_height == 0, 0);
+				arrange_container(child, width, net_height,
+					title_bar_height == 0 && !row_hidden, 0);
 			} else {
 				disable_container(child);
 			}

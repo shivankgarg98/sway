@@ -777,6 +777,18 @@ The default colors are:
 	should be greater than titlebar_border_thickness. If _vertical_ value is
 	not specified it is set to the _horizontal_ value.
 
+*tab_titles* show|hide|toggle
+	Whether a workspace's top-level tabbed container draws its row of tab
+	titles. Top-level means the workspace itself is tabbed, or the tabbed
+	container is reached from the workspace through splits that each hold only
+	it, so it spans the whole workspace. With _hide_, each of its tabs' content
+	starts at the top of the container and windows directly in it draw no
+	title bar of their own, even with *border normal*. Use this when those
+	tabs are shown elsewhere, e.g. by a status bar following the IPC tree.
+	Other tabbed containers (beside other containers, or inside a tabbed or
+	stacked one) keep their row, and stacked containers are unaffected.
+	Default is _show_.
+
 *for_window* <criteria> <command>
 	Whenever a window that matches _criteria_ appears, run list of commands.
 	See *CRITERIA* for more details.

@@ -286,6 +286,12 @@ enum sway_container_layout container_parent_layout(struct sway_container *con);
 
 list_t *container_get_siblings(struct sway_container *container);
 
+/**
+ * Whether the tab row of child's tabbed parent is hidden by "tab_titles hide",
+ * using the current (transaction) or pending state.
+ */
+bool container_tab_row_hidden(struct sway_container *child, bool current);
+
 int container_sibling_index(struct sway_container *child);
 
 void container_handle_fullscreen_reparent(struct sway_container *con);
